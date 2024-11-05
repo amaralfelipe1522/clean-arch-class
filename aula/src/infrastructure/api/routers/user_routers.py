@@ -11,6 +11,7 @@ from usecases.user.list_users.list_users_dto import ListUsersInputDto, ListUsers
 from usecases.user.list_users.list_users_usecase import ListUserUseCase
 from usecases.user.update_user.update_user_dto import UpdateUserInputDto, UpdateUserOutputDto
 from usecases.user.update_user.update_user_usecase import UpdateUserUseCase
+from infrastructure.presenters.user_presenters import UserPresenter
 
 # Swagger -> http://localhost:8000/docs
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -23,7 +24,14 @@ def add_user(request: AddUserInputDto, session: Session = Depends(get_session)):
         usecase = AddUserUseCase(user_repository=user_repository)
         output = usecase.execute(input=request)
 
-        return output
+        # utilizando exemplo de Presenters
+        output_json = UserPresenter.toJSON(user_dto=output)
+        output_xml = UserPresenter.toXML(user_dto=output)
+
+        return {"json":output_json, "xml":output_xml}
+        # return output
+
+
     
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
