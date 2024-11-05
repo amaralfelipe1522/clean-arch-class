@@ -11,7 +11,7 @@ class AddUserUseCase(UseCaseInterface):
         self.user_repository = user_repository
 
     def execute(self, input: AddUserInputDto) -> AddUserOutputDto:
-        user = User(id = uuid.uuid4, name=input.name)
+        user = User(id = uuid.uuid4(), name=input.name)
 
         self.user_repository.add_user(user=user)
         print('Usuário cadastrado: ', user)
